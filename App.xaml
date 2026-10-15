@@ -6,7 +6,7 @@
 
     <Style TargetType="Window"><Setter Property="Background" Value="{DynamicResource WindowBackground}"/><Setter Property="Foreground" Value="{DynamicResource Ink}"/><Setter Property="FontFamily" Value="Segoe UI"/></Style>
 
-    
+
 
     <Style TargetType="Button">
 
@@ -79,4 +79,3 @@
   </Application.Resources>
 
 </Application>
-
