@@ -1,6 +1,6 @@
 # Orbit
 
-A portable C# / WPF website launcher for Windows, created by **Dario P.**
+A portable C# / WPF website launcher for Windows.
 
 ## Features
 
