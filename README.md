@@ -2,6 +2,18 @@
 
 A portable C# / WPF website launcher for Windows.
 
+[**Download for Windows**](https://github.com/donishki/orbit-shortcuts/releases/latest) · [Features](#features) · [Build from source](#build)
+
+## Screenshots
+
+### Charcoal
+
+![Orbit in charcoal mode, showing website cards and the collection sidebar](docs/screenshots/orbit-dark.png)
+
+### Light
+
+![Orbit in light mode, showing website cards and the collection sidebar](docs/screenshots/orbit-light.png)
+
 ## Features
 
 - Website cards with automatic or custom icons
