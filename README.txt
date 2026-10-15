@@ -1,4 +1,5 @@
 ﻿ORBIT 1.1.2 - WEBSITE SHORTCUTS
+Created by Dario P.
 
 Run ShortcutsPanel.exe on 64-bit Windows 10 or Windows 11.
 No installer or separate .NET installation is required.
@@ -19,7 +20,7 @@ NEW IN 1.1
   Importing a library clears undo history. Undo history is not saved on exit.
 - Open collection is available in Manage collections and the right-click menu.
   Opening multiple sites asks for confirmation and opens each distinct URL once.
-- About Orbit displays version 1.1.2
+- About Orbit displays version 1.1.2 and author Dario P.
 
 Add, edit, delete, search, and group website cards. Dark mode is optional.
 Website icons are discovered from page metadata, then /favicon.ico.
@@ -52,4 +53,4 @@ dotnet run --project tests/ThemeChecks.csproj
 
 1.1.1: aligned sidebar rows, whole-card dragging, and the Orbit icon in About.
 
-1.1.2: starts maximized; green outer borders for drag/focus; Dark mode is at the sidebar bottom; About includes the release year.
+1.1.2: starts maximized; green outer borders for drag/focus; Dark mode is at the sidebar bottom; About credits Dario P. and 2026.
