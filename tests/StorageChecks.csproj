@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0-windows</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup><Compile Remove="ThemeChecks.cs;FeatureChecks.cs"/><Compile Include="../SettingsStore.cs" Link="SettingsStore.cs" /></ItemGroup>
+</Project>

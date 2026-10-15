@@ -1,0 +1,9 @@
+bin/
+obj/
+portable/
+release/
+*.zip
+.vs/
+*.user
+settings.json*
+shortcuts.json*
