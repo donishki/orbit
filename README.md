@@ -2,7 +2,7 @@
 
 A portable C# / WPF website launcher for Windows.
 
-[**Download for Windows**](https://github.com/donishki/orbit-shortcuts/releases/latest) · [Features](#features) · [Build from source](#build)
+[**Download for Windows**](https://github.com/donishki/orbit/releases/latest) · [Features](#features) · [Build from source](#build)
 
 ## Screenshots
 
