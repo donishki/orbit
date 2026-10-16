@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 public static class WebsiteIcons
 {

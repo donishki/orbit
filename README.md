@@ -26,7 +26,7 @@ A portable C# / WPF website launcher for Windows.
 ## Run
 
 Download the portable Windows x64 package from this repository's Releases page,
-extract it, and run `ShortcutsPanel.exe`. No installer or separate .NET runtime
+extract it, and run `Orbit.exe`. No installer or separate .NET runtime
 is required. Windows 10 or Windows 11, 64-bit.
 
 ## Settings
@@ -44,7 +44,7 @@ the theme remains local. Undo history lasts for the current session.
 Requires Windows and the .NET 8 SDK.
 
 ```powershell
-dotnet publish ShortcutsPanel.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -o release
+dotnet publish Orbit.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -o release
 ```
 
 ## Checks

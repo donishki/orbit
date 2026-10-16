@@ -1,7 +1,7 @@
-﻿ORBIT 1.1.2 - WEBSITE SHORTCUTS
+ORBIT 1.1.3 - WEBSITE SHORTCUTS
 Created by Dario P.
 
-Run ShortcutsPanel.exe on 64-bit Windows 10 or Windows 11.
+Run Orbit.exe on 64-bit Windows 10 or Windows 11.
 No installer or separate .NET installation is required.
 
 NEW IN 1.1
@@ -20,7 +20,7 @@ NEW IN 1.1
   Importing a library clears undo history. Undo history is not saved on exit.
 - Open collection is available in Manage collections and the right-click menu.
   Opening multiple sites asks for confirmation and opens each distinct URL once.
-- About Orbit displays version 1.1.2 and author Dario P.
+- About Orbit displays version 1.1.3 and author Dario P.
 
 Add, edit, delete, search, and group website cards. Dark mode is optional.
 Website icons are discovered from page metadata, then /favicon.ico.
@@ -44,7 +44,7 @@ The bundled .NET runtime extracts supporting files to temporary storage.
 This executable is not digitally signed.
 
 Build:
-dotnet publish ShortcutsPanel.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -o release
+dotnet publish Orbit.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -o release
 
 Checks:
 dotnet run --project tests/StorageChecks.csproj
@@ -54,3 +54,5 @@ dotnet run --project tests/ThemeChecks.csproj
 1.1.1: aligned sidebar rows, whole-card dragging, and the Orbit icon in About.
 
 1.1.2: starts maximized; green outer borders for drag/focus; Dark mode is at the sidebar bottom; About credits Dario P. and 2026.
+
+1.1.3: Orbit naming throughout; website count beside the heading; contextual Undo notice; cleaner library layout.

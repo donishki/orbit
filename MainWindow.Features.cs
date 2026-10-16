@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.Json;
@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 public partial class MainWindow
 {
@@ -72,7 +72,7 @@ public partial class MainWindow
                 if (choice == MessageBoxResult.Cancel) return;
                 var next = choice == MessageBoxResult.Yes ? LibraryOperations.Merge(entries, incoming.Links) : incoming.Links;
                 var order = choice == MessageBoxResult.Yes ? collectionOrder.Concat(incoming.Collections).Distinct().ToList() : incoming.Collections;
-                if (Save(next, order)) { deleted.Clear(); if (undoButton != null) undoButton.IsEnabled = false; dialog.Close(); }
+                if (Save(next, order)) { deleted.Clear(); UpdateUndoNotice(); dialog.Close(); }
             }
             catch (Exception ex) { MessageBox.Show(dialog, ex.Message, "Import failed — library unchanged"); }
         }); import.Margin = new Thickness(0,12,0,18); panel.Children.Add(import);
@@ -83,14 +83,19 @@ public partial class MainWindow
         var index = entries.FindIndex(x => x.Id == item.Id); if (index < 0) return false;
         var next = entries.ToList(); next.RemoveAt(index);
         if (!Save(next)) return false;
-        deleted.Push((item, index)); if (undoButton != null) undoButton.IsEnabled = true;
-        status.Text = $"Deleted {item.Name} · Undo is available"; return true;
+        deleted.Push((item, index)); UpdateUndoNotice(); return true;
+    }
+    void UpdateUndoNotice()
+    {
+        undoNotice.Visibility = deleted.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        status.Text = deleted.TryPeek(out var latest) ? $"Removed {latest.Item.Name}" : "";
+        if (undoButton != null) undoButton.IsEnabled = deleted.Count > 0;
     }
     void UndoDelete()
     {
         if (!deleted.TryPeek(out var restore)) return;
         var next = entries.ToList(); next.Insert(Math.Min(restore.Index, next.Count), restore.Item);
-        if (Save(next)) { deleted.Pop(); if (undoButton != null) undoButton.IsEnabled = deleted.Count > 0; }
+        if (Save(next)) { deleted.Pop(); UpdateUndoNotice(); }
     }
     void ManageCollections()
     {

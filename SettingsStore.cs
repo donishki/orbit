@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Win32;
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 public sealed class SettingsStore
 {

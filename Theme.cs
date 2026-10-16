@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using System.Windows.Media;
 
@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 
 

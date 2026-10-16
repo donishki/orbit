@@ -1,7 +1,7 @@
 using System.IO;
 using System.Windows.Media.Imaging;
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 public static class CustomIcons
 {

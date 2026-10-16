@@ -6,8 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <AssemblyName>ShortcutsPanel</AssemblyName>
-    <Version>1.1.2</Version>
+    <AssemblyName>Orbit</AssemblyName>
+    <Version>1.1.3</Version>
+    <Product>Orbit</Product>
+    <Title>Orbit</Title>
+    <Description>Orbit website launcher</Description>
   </PropertyGroup>
   <ItemGroup><Compile Remove="tests/**/*.cs" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="app.ico" LogicalName="OrbitIcon" /></ItemGroup>

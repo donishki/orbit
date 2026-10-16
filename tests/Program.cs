@@ -1,5 +1,5 @@
 using Microsoft.Win32;
-using ShortcutsPanel;
+using Orbit;
 var key = @"Software\OrbitStorageChecks\" + Guid.NewGuid().ToString("N");
 var folder = Path.Combine(Path.GetTempPath(), "OrbitStorageChecks-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(folder);

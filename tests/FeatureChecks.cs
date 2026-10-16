@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ShortcutsPanel;
+using Orbit;
 
 internal static class FeatureChecks
 {
@@ -17,6 +17,8 @@ internal static class FeatureChecks
         var app = new App(); app.InitializeComponent();
         Check(MainWindow.LoadAppIcon().PixelWidth > 0, "About icon loads from embedded resource");
         var window = new MainWindow(store);
+        var notice = (System.Windows.Controls.Border)typeof(MainWindow).GetField("undoNotice", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(window)!;
+        Check(window.Title == "Orbit" && notice.Visibility == System.Windows.Visibility.Collapsed, "Orbit title and hidden initial Undo notice");
         object? Call(string method, params object?[] args) => typeof(MainWindow).GetMethod(method, BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(window, args);
         try
         {
@@ -31,7 +33,9 @@ internal static class FeatureChecks
             Check(JsonSerializer.Deserialize<List<Shortcut>>(store.Load()!)![0].Name == "C", "Card order persists");
             Check((bool)Call("DeleteShortcut", original[0])!, "Delete shortcut");
             Check(JsonSerializer.Deserialize<List<Shortcut>>(store.Load()!)!.Count == 2, "Deletion saved");
+            Check(notice.Visibility == System.Windows.Visibility.Visible, "Undo notice appears after deletion");
             Call("UndoDelete");
+            Check(notice.Visibility == System.Windows.Visibility.Collapsed, "Undo notice hides after restoring last deletion");
             Check(JsonSerializer.Deserialize<List<Shortcut>>(store.Load()!)!.Select(x => x.Name).SequenceEqual(new[] { "C", "A", "B" }), "Undo restores original position");
             var pngPath = Path.Combine(directory, "icon.png");
             var bitmap = BitmapSource.Create(2, 2, 96, 96, PixelFormats.Bgra32, null, new byte[] { 0,0,255,255, 0,255,0,255, 255,0,0,255, 255,255,255,255 }, 8);

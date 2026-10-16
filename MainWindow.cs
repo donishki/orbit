@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Net.Http;
-namespace ShortcutsPanel;
+namespace Orbit;
 public record Shortcut(string Name, string Url, string Group, string Color, string? Icon = null, string Id = "");
 public partial class MainWindow : Window
 {
@@ -17,7 +17,9 @@ public partial class MainWindow : Window
     readonly TextBlock heading = new() { FontSize = 30, FontWeight = FontWeights.SemiBold };
     static readonly Dictionary<string, Task<BitmapSource?>> logos = new();
     readonly TextBox search = new() { Width = 280, ToolTip = "Search by name, website, or collection" };
-    readonly TextBlock status = new() { Foreground = Brush("#939DB8"), FontSize = 12 };
+    readonly TextBlock websiteCount = new() { FontSize = 12, Foreground = Brush("#7B8377"), VerticalAlignment = VerticalAlignment.Center };
+    readonly TextBlock status = new() { FontSize = 12, VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
+    Border undoNotice = null!;
     List<Shortcut> entries = [];
     string selectedGroup = "All";
     List<string> collectionOrder = [];
@@ -31,7 +33,7 @@ public partial class MainWindow : Window
         try { Theme.Apply(settings.LoadDarkTheme()); }
         catch { Theme.Apply(false); }
         Background = Brush("#FAF9F6"); Foreground = Brush("#252924"); FontFamily = new FontFamily("Segoe UI");
-        Title = "Orbit • Shortcuts Panel"; Width = 1100; Height = 720; MinWidth = 800; MinHeight = 520;
+        Title = "Orbit"; Width = 1100; Height = 720; MinWidth = 800; MinHeight = 520;
         WindowStartupLocation = WindowStartupLocation.CenterScreen; WindowState = WindowState.Maximized;
         var root = new Grid(); Content = root;
         root.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(210) });
@@ -39,7 +41,7 @@ public partial class MainWindow : Window
         var sidebar = new DockPanel { Margin = new Thickness(20, 32, 20, 24) };
         var sideSurface = new Border { Background = Brush("#F1F2ED"), BorderBrush = Brush("#E2E5DD"), BorderThickness = new Thickness(0,0,1,0), Child = sidebar }; root.Children.Add(sideSurface);
         var brand = new StackPanel { Margin = new Thickness(12, 0, 0, 36) };
-        brand.Children.Add(new TextBlock { Text = "◉  orbit", FontSize = 27, FontWeight = FontWeights.SemiBold, Foreground = Brush("#294B3C") });
+        brand.Children.Add(new TextBlock { Text = "◉  Orbit", FontSize = 27, FontWeight = FontWeights.SemiBold, Foreground = Brush("#294B3C") });
         brand.Children.Add(new TextBlock { Text = "A little more organized.", FontSize = 11, Foreground = Brush("#80877D"), Margin = new Thickness(1, 6, 0, 0) });
         DockPanel.SetDock(brand, Dock.Top); sidebar.Children.Add(brand);
         var bottom = new StackPanel();
@@ -68,17 +70,23 @@ public partial class MainWindow : Window
         var top = new StackPanel(); DockPanel.SetDock(top, Dock.Top); main.Children.Add(top);
         var header = new DockPanel(); top.Children.Add(header);
         var add = Button("＋  Add website", () => Edit(null), "#294B3D"); add.Foreground = Brushes.White; add.VerticalAlignment = VerticalAlignment.Center; DockPanel.SetDock(add, Dock.Right); header.Children.Add(add);
-        header.Children.Add(heading);
+        var titleRow = new DockPanel();
+        var countBadge = new Border { Background = Brush("#DFE6DA"), CornerRadius = new CornerRadius(10), Padding = new Thickness(10,5,10,5), Margin = new Thickness(14,0,18,0), VerticalAlignment = VerticalAlignment.Center, Child = websiteCount };
+        DockPanel.SetDock(heading, Dock.Left); titleRow.Children.Add(heading); titleRow.Children.Add(countBadge);
+        countBadge.HorizontalAlignment = HorizontalAlignment.Left;
+        header.Children.Add(titleRow);
         top.Children.Add(new TextBlock { Text = "Your favorite places, thoughtfully collected.", FontSize = 13, Foreground = Brush("#7B8377"), Margin = new Thickness(0, 9, 0, 26) });
         search.Width = double.NaN; search.HorizontalAlignment = HorizontalAlignment.Stretch;
         search.ToolTip = "Search websites and collections";
         System.Windows.Automation.AutomationProperties.SetName(search, "Search websites");
         var searchRow = new DockPanel { Margin = new Thickness(0, 0, 8, 28) };
         var searchLabel = new TextBlock { Text = "Search", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0,0,12,0), Foreground = Brush("#7B8377"), FontSize = 12 }; searchRow.Children.Add(searchLabel); searchRow.Children.Add(search); top.Children.Add(searchRow);
-        var footer = new DockPanel { Margin = new Thickness(0, 16, 8, 0) }; DockPanel.SetDock(footer, Dock.Bottom); main.Children.Add(footer);
-        undoButton = Button("Undo deletion", UndoDelete); undoButton.IsEnabled = false;
-        DockPanel.SetDock(undoButton, Dock.Right); footer.Children.Add(undoButton);
-        status.Foreground = Brush("#868D80"); footer.Children.Add(status);
+        var noticeRow = new DockPanel();
+        undoButton = Button("Undo", UndoDelete); undoButton.Margin = new Thickness(16,0,0,0);
+        DockPanel.SetDock(undoButton, Dock.Right); noticeRow.Children.Add(undoButton);
+        status.Foreground = Brush("#374632"); noticeRow.Children.Add(status);
+        undoNotice = new Border { Background = Brush("#DFE6DA"), BorderBrush = Brush("#E2E5DD"), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(10), Padding = new Thickness(14,8,8,8), Margin = new Thickness(0,12,8,0), MaxWidth = 460, HorizontalAlignment = HorizontalAlignment.Left, Visibility = Visibility.Collapsed, Child = noticeRow };
+        DockPanel.SetDock(undoNotice, Dock.Bottom); main.Children.Add(undoNotice);
         main.Children.Add(new ScrollViewer { Content = cards, VerticalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled });
         search.TextChanged += (_, _) => RenderCards();
         Load(); Render();
@@ -126,9 +134,9 @@ public partial class MainWindow : Window
             b.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             var row = new DockPanel { Width = 138 };
             var number = new TextBlock { Text = count.ToString(), Foreground = Brush("#7B8377"), FontSize = 11, VerticalAlignment = VerticalAlignment.Center }; DockPanel.SetDock(number, Dock.Right); row.Children.Add(number);
-            row.Children.Add(new TextBlock { Text = name == "All" ? "▦   All websites" : "•   " + name, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis, Foreground = Brush("#374632") });
+            row.Children.Add(new TextBlock { Text = name == "All" ? "▦   All Websites" : "•   " + name, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis, Foreground = Brush("#374632") });
             b.Content = row; b.Margin = new Thickness(0,0,0,6); groups.Children.Add(b);
-            System.Windows.Automation.AutomationProperties.SetName(b, name == "All" ? "All websites" : name);
+            System.Windows.Automation.AutomationProperties.SetName(b, name == "All" ? "All Websites" : name);
             if (name != "All") ConfigureCollection(b, name);
         }
         RenderCards();
@@ -160,8 +168,8 @@ public partial class MainWindow : Window
             cards.Children.Add(card); ConfigureCard(card, item);
         }
         if (filtered.Count == 0) cards.Children.Add(new TextBlock { Text = entries.Count == 0 ? "A fresh start. Add your first website above." : "No websites match. Try another search or collection.", FontSize = 18, Margin = new Thickness(0, 35, 0, 35) });
-        heading.Text = selectedGroup == "All" ? "All websites" : selectedGroup;
-        status.Text = $"{filtered.Count} websites   ·   Opens in your default browser";
+        heading.Text = selectedGroup == "All" ? "All Websites" : selectedGroup;
+        websiteCount.Text = $"{filtered.Count} {(filtered.Count == 1 ? "Website" : "Websites")}";
     }
     static async Task ApplyLogo(Border badge, string url)
     {

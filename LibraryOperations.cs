@@ -2,7 +2,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ShortcutsPanel;
+namespace Orbit;
 
 public sealed record LibraryExport(int Version, List<Shortcut> Links, List<string> Collections);
 

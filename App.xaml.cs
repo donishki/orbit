@@ -1,5 +1,5 @@
 using System.Windows;
-namespace ShortcutsPanel;
+namespace Orbit;
 public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
