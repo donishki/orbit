@@ -1,9 +1,10 @@
 ORBIT 1.1.3 - WEBSITE SHORTCUTS
 Created by Dario P.
 
-Run Orbit.exe on 64-bit Windows 10 or Windows 11.
+Run Orbit.exe. Choose x64 for 64-bit Windows 10/11, or x86 for 32-bit
+Windows 10. The x86 version also runs on 64-bit Windows.
 The portable version needs no installer or separate .NET installation.
-Alternatively, run Orbit-Setup-win-x64.exe to install Orbit for your Windows
+Alternatively, run Orbit-Setup-win-x64.exe or Orbit-Setup-win-x86.exe to install Orbit for your Windows
 account with a Start menu shortcut and optional desktop shortcut. Uninstall
 through Windows Settings > Apps. Saved links and settings are preserved.
 
